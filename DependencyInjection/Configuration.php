@@ -165,6 +165,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('accessKey')->isRequired()->end()
                                 ->scalarNode('secretKey')->isRequired()->end()
                                 ->scalarNode('proxy')->defaultValue(false)->end()
+                                ->scalarNode('s3_region')->defaultValue(false)->end()
                                 ->scalarNode('create')->defaultValue(false)->end()
                                 ->scalarNode('storage')
                                     ->defaultValue('standard')
