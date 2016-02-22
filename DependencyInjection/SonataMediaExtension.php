@@ -376,6 +376,15 @@ class SonataMediaExtension extends Extension
                 $s3Options['version'] = $config['filesystem']['s3']['s3_version'];
             }
 
+            if (array_key_exists('credentials', $config['filesystem']['s3'])) {
+                if (false !== $config['filesystem']['s3']['credentials']['key'] && false !== $config['filesystem']['s3']['credentials']['secret']) {
+                    $s3Options['credentials'] = array(
+                        'key'    => $config['filesystem']['s3']['credentials']['key'],
+                        'secret' => $config['filesystem']['s3']['credentials']['secret']
+                    );
+                }
+            }
+
             $container->getDefinition('sonata.media.adapter.service.s3')
                 ->replaceArgument(0, $s3Options)
             ;
