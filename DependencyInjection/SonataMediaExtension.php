@@ -372,6 +372,10 @@ class SonataMediaExtension extends Extension
                 $s3Options['region'] = $config['filesystem']['s3']['s3_region'];
             }
 
+            if ($config['filesystem']['s3']['s3_version'] !== false) {
+                $s3Options['version'] = $config['filesystem']['s3']['s3_version'];
+            }
+
             $container->getDefinition('sonata.media.adapter.service.s3')
                 ->replaceArgument(0, $s3Options)
             ;
