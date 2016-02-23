@@ -14,9 +14,8 @@ namespace Sonata\MediaBundle\Metadata;
 use Sonata\MediaBundle\Metadata\MetadataBuilderInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
 
-use Aws\S3\Enum\CannedAcl;
-use Aws\S3\Enum\Storage;
 use Guzzle\Http\Mimetypes;
+use AmazonS3;
 
 class AmazonMetadataBuilder implements MetadataBuilderInterface
 {
@@ -24,12 +23,12 @@ class AmazonMetadataBuilder implements MetadataBuilderInterface
     protected $settings;
 
     protected $acl = array(
-        'private' => CannedAcl::PRIVATE_ACCESS,
-        'public' => CannedAcl::PUBLIC_READ,
-        'open' => CannedAcl::PUBLIC_READ_WRITE,
-        'auth_read' => CannedAcl::AUTHENTICATED_READ,
-        'owner_read' => CannedAcl::BUCKET_OWNER_READ,
-        'owner_full_control' => CannedAcl::BUCKET_OWNER_FULL_CONTROL,
+        'private'            => AmazonS3::ACL_PRIVATE,
+        'public'             => AmazonS3::ACL_PUBLIC,
+        'open'               => AmazonS3::ACL_OPEN,
+        'auth_read'          => AmazonS3::ACL_AUTH_READ,
+        'owner_read'         => AmazonS3::ACL_OWNER_READ,
+        'owner_full_control' => AmazonS3::ACL_OWNER_FULL_CONTROL,
     );
 
     /**
@@ -50,15 +49,15 @@ class AmazonMetadataBuilder implements MetadataBuilderInterface
         //merge acl
         $output = array();
         if (isset($this->settings['acl']) && !empty($this->settings['acl'])) {
-            $output['acl'] = $this->acl[$this->settings['acl']];
+            $output['ACL'] = $this->acl[$this->settings['acl']];
         }
 
         //merge storage
         if (isset($this->settings['storage'])) {
             if ($this->settings['storage'] == 'standard') {
-                $output['storage'] = Storage::STANDARD;
+                $output['storage'] = AmazonS3::STANDARD;
             } elseif ($this->settings['storage'] == 'reduced') {
-                $output['storage'] = Storage::REDUCED;
+                $output['storage'] = AmazonS3::REDUCED;
             }
         }
 
@@ -94,7 +93,7 @@ class AmazonMetadataBuilder implements MetadataBuilderInterface
         $extension   = pathinfo($filename, PATHINFO_EXTENSION);
         $contentType = Mimetypes::getInstance()->fromExtension($extension);
 
-        return array('contentType'=> $contentType);
+        return array('contentType' => $contentType);
     }
 
     /**
